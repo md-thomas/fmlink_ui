@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "open_wave_ui"
+version = "0.1.0"
+description = "customtkinter GUI front end for the OpenWave ota_station"
+requires-python = ">=3.9"
+dependencies = ["customtkinter", "matplotlib", "numpy"]
+
+[project.scripts]
+ota-gui = "ota_gui.main:main"
+
+[tool.setuptools]
+packages = ["ota_gui", "ota_gui.panels"]
