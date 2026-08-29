@@ -1,15 +1,16 @@
 """Every live status readout lives here: the current Mode/FEC (formerly
-shown in ModePanel), and link counters (reuses
+shown in SettingsPanel), and link counters (reuses
 ota_station._link_counts_compact, the same compact rendering the CLI's
-session summary uses). The Connect/Disconnect action itself lives in
-sim_panel.py, next to the address/port fields it connects with."""
+session summary uses). There's no Connect/Disconnect button anywhere in
+the window - App connects automatically on launch (see app.py), so
+"not connected" here normally only appears very briefly at startup, or if
+that connect attempt itself failed (see session_panel.py's error label)."""
 import customtkinter as ctk
 
 import openwave_link as link
 import ota_station
 
-NOT_CONNECTED_HINT = ("not connected - picking a Mode/FEC/Bandwidth or clicking "
-                       "Ping/etc. will connect first, using these settings")
+NOT_CONNECTED_HINT = "not connected"
 
 
 class StatusBar(ctk.CTkFrame):

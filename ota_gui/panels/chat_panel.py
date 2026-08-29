@@ -1,15 +1,19 @@
-"""Scrolling message/log view + entry box - the messaging half of the GUI.
-Received messages, sent-message echoes, and every diagnostic line Station
-would otherwise print to stderr (negotiate/ping/rx-error output, all routed
-through Station's on_log hook) share one chronological feed, matching how
-ota_station.py's CLI already interleaves them on one terminal - but styled
-differently (see the 'sent'/'received'/'status' tags below) so the actual
-conversation stands out from the diagnostic noise around it."""
+"""Scrolling message view + entry box - the actual conversation only (sent/
+received chat text, each shown as "source -> destination: message"). Every
+diagnostic line - negotiate/ping/rx/ack output, connect/disconnect banners,
+command echoes, errors, /modes reference text, Speed Test progress/results
+- lives in the separate StatusPanel instead (status_panel.py), so it
+doesn't bury the conversation the way ota_station.py's CLI interleaves
+everything on one terminal.
+
+The "source -> destination: message" formatting itself happens in App
+(app.py's _send_text/_poll), not here - this panel has no idea what this
+station's own station_id/dst_id are, only App/the live Station object
+does."""
 import customtkinter as ctk
 
 SENT_COLOR = '#3b8ed0'
 RECEIVED_COLOR = '#2fa84f'
-STATUS_COLOR = 'gray55'
 
 
 class ChatPanel(ctk.CTkFrame):
@@ -18,25 +22,29 @@ class ChatPanel(ctk.CTkFrame):
         self._on_send_text = on_send_text
         self._on_command = on_command
 
+        header = ctk.CTkFrame(self, fg_color="transparent")
+        header.pack(fill="x", padx=8, pady=(8, 0))
+        ctk.CTkLabel(header, text="Messages", font=ctk.CTkFont(size=13, weight="bold"),
+                     anchor="w").pack(side="left", padx=2)
+        ctk.CTkButton(header, text="Clear", width=70, height=28, command=self.clear).pack(side="right")
+
         self.log = ctk.CTkTextbox(self, state="disabled", wrap="word")
-        self.log.pack(fill="both", expand=True, padx=8, pady=(8, 4))
+        self.log.pack(fill="both", expand=True, padx=8, pady=(4, 4))
 
         # CTkTextbox refuses per-tag fonts outright ("incompatible with
         # scaling" - see its tag_config()), so color is the whole
         # distinction here rather than also varying weight/size.
         self.log.tag_config('sent', foreground=SENT_COLOR)
         self.log.tag_config('received', foreground=RECEIVED_COLOR)
-        self.log.tag_config('status', foreground=STATUS_COLOR)
 
         entry_row = ctk.CTkFrame(self, fg_color="transparent")
         entry_row.pack(fill="x", padx=8, pady=(0, 8))
         self.entry = ctk.CTkEntry(
             entry_row,
-            placeholder_text="Type a message and Send to connect, or a /command (see /help)")
+            placeholder_text="Type a message, or a /command (see /help)")
         self.entry.pack(side="left", fill="x", expand=True, padx=(0, 6))
         self.entry.bind("<Return>", lambda _event: self._send())
-        ctk.CTkButton(entry_row, text="Send", width=70, command=self._send).pack(side="left")
-        ctk.CTkButton(entry_row, text="Clear", width=60, command=self.clear).pack(side="left", padx=(6, 0))
+        ctk.CTkButton(entry_row, text="Send", width=70, height=28, command=self._send).pack(side="left")
 
     def _send(self):
         text = self.entry.get().strip()
@@ -46,10 +54,12 @@ class ChatPanel(ctk.CTkFrame):
         if text.startswith('/'):
             self._on_command(text)
         else:
-            self.append(f"> {text}", tag='sent')
+            # No local echo here - App's _send_text appends the "source ->
+            # destination: message" line itself once it knows a session is
+            # actually live (it may still need to auto-connect first).
             self._on_send_text(text)
 
-    def append(self, line, tag='status'):
+    def append(self, line, tag='received'):
         self.log.configure(state="normal")
         self.log.insert("end", line + "\n", tags=tag)
         self.log.configure(state="disabled")

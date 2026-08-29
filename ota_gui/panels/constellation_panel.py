@@ -27,11 +27,21 @@ class ConstellationPanel(ctk.CTkFrame):
         self._history = collections.deque(maxlen=HISTORY_BURSTS)
         self._last_modulation = None
 
-        self.figure = Figure(figsize=(3.4, 3.4), dpi=100)
+        header = ctk.CTkFrame(self, fg_color="transparent")
+        header.pack(fill="x", padx=8, pady=(8, 0))
+        ctk.CTkLabel(header, text="Constellation", font=ctk.CTkFont(size=13, weight="bold"),
+                     anchor="w").pack(side="left", padx=2)
+        # Just calls reset() - the same rolling-history clear a modulation
+        # change already triggers automatically (see update_symbols) - this
+        # is the manual equivalent, for clearing the accumulated HISTORY_
+        # BURSTS scatter on demand without waiting for that.
+        ctk.CTkButton(header, text="Clear", width=70, height=28, command=self.reset).pack(side="right")
+
+        self.figure = Figure(figsize=(2.6, 2.6), dpi=100)
         self.ax = self.figure.add_subplot(111)
         self.figure.subplots_adjust(left=0.12, right=0.96, top=0.96, bottom=0.1)
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
-        self.canvas.get_tk_widget().pack(fill="both", expand=True, padx=8, pady=(8, 0))
+        self.canvas.get_tk_widget().pack(fill="both", expand=True, padx=8, pady=(4, 0))
 
         self.readout = ctk.CTkLabel(self, text="SNR: -    EVM: -", font=ctk.CTkFont(size=13))
         self.readout.pack(pady=(4, 10))
