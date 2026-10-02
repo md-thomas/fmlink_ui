@@ -29,7 +29,6 @@ class StationController:
         self.station = None
         self._loop = None
         self._thread = None
-        self._transport = None
 
     @property
     def connected(self):
@@ -54,18 +53,18 @@ class StationController:
 
     # -- connect / disconnect --------------------------------------------
     def connect(self, **station_kwargs):
-        """station_kwargs: station_id, dst_id, sim_host, sim_port, local_port,
+        """station_kwargs: station_id, dst_id, sim_host, sim_port,
         mode_id, use_fec, fec_preset, use_ack, auto, bandwidth, verbose - the
         GUI-panel equivalents of ota_station.py's CLI flags. Blocks (briefly)
-        until the UDP socket is bound and the station has registered with the
-        simulator - mirrors ota_station.run()'s setup."""
+        until the station's TCP connection to the simulator is up and
+        registered - mirrors ota_station.run()'s setup."""
         if self.station is not None:
             raise RuntimeError("already connected - disconnect() first")
         self._start_loop()
         fut = asyncio.run_coroutine_threadsafe(self._connect(**station_kwargs), self._loop)
         return fut.result(timeout=10)
 
-    async def _connect(self, station_id, dst_id, sim_host, sim_port, local_port=0,
+    async def _connect(self, station_id, dst_id, sim_host, sim_port,
                         mode_id=0, use_fec=False, fec_preset=None, use_ack=False,
                         auto=False, bandwidth='wide', verbose=False):
         # Same use_fec-implied-by-auto rule as ota_station.run().
@@ -78,14 +77,9 @@ class StationController:
             on_symbols=lambda symbols, modulation, snr_db: self._emit(
                 'symbols', symbols=symbols, modulation=modulation, snr_db=snr_db),
         )
-        loop = asyncio.get_running_loop()
-        transport, _ = await loop.create_datagram_endpoint(
-            lambda: station, local_addr=('0.0.0.0', local_port))
-        station._sim_addr = (sim_host, sim_port)
-        station.register()
+        await station.connect(sim_host, sim_port)
         self.station = station
-        self._transport = transport
-        self._emit('connected', local_port=transport.get_extra_info('sockname')[1])
+        self._emit('connected', sim_address=f"{sim_host}:{sim_port}")
         return station
 
     def disconnect(self):
@@ -96,10 +90,8 @@ class StationController:
 
     async def _disconnect(self):
         summary = self.station.stats_summary()
-        if self._transport is not None:
-            self._transport.close()
+        self.station.close()
         self.station = None
-        self._transport = None
         self._emit('disconnected', summary=summary)
 
     # -- actions (fire-and-forget from the GUI's point of view; results/

@@ -23,7 +23,7 @@ DEFAULT_WINDOW_SIZE = (1300, 820)
 
 
 class App(ctk.CTk):
-    def __init__(self, sim_host, sim_port, local_port):
+    def __init__(self, sim_host, sim_port):
         super().__init__()
         self.title("OpenWave OTA Station")
 
@@ -47,7 +47,6 @@ class App(ctk.CTk):
         # the GUI at all; _ensure_connected() reads them straight off self.
         self._sim_host = sim_host
         self._sim_port = sim_port
-        self._local_port = local_port
 
         self.controller = StationController()
         self._build_menu()
@@ -213,8 +212,7 @@ class App(ctk.CTk):
             return False
 
         use_fec, fec_preset = self.settings_panel.get_initial_fec()
-        settings = dict(session_settings, sim_host=self._sim_host, sim_port=self._sim_port,
-                         local_port=self._local_port)
+        settings = dict(session_settings, sim_host=self._sim_host, sim_port=self._sim_port)
         settings.update(self.settings_panel.get_session_settings())
         settings.update(
             mode_id=self.settings_panel.get_initial_mode_id(),
@@ -360,7 +358,7 @@ class App(ctk.CTk):
                 # is only processed on the NEXT poll tick, after that -
                 # clearing here would silently wipe it out from under
                 # whatever the user just did.
-                self.status_panel.append(f"[connected] local port {data['local_port']}")
+                self.status_panel.append(f"[connected] via simulator {data['sim_address']}")
                 self.session_panel.set_connected(True)
                 self.settings_panel.set_connected(True)
                 self._file_menu.entryconfigure(0, label="ota-sim-disconnect")

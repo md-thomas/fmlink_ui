@@ -2,7 +2,7 @@
 
     python3 -m ota_gui.main --sim-host 127.0.0.1 --sim-port 9500
 
-The simulator address (--sim-host/--sim-port/--local-port) is fixed for
+The simulator address (--sim-host/--sim-port) is fixed for
 the life of the process, set here on the command line - there's no
 Simulator panel in the window at all; the app connects immediately on
 launch using this address plus whatever's in the Station panel's defaults
@@ -24,12 +24,9 @@ def main():
                          help='ota_sim simulator address (default: 127.0.0.1)')
     parser.add_argument('--sim-port', type=int, default=9500,
                          help='ota_sim simulator port (default: 9500)')
-    parser.add_argument('--local-port', type=int, default=0,
-                         help='Local UDP port to bind (default: 0 = OS-assigned; set '
-                              'explicitly when crossing machines/firewalls)')
     args = parser.parse_args()
 
-    app = App(sim_host=args.sim_host, sim_port=args.sim_port, local_port=args.local_port)
+    app = App(sim_host=args.sim_host, sim_port=args.sim_port)
     app.mainloop()
 
 

@@ -43,7 +43,7 @@ Then, per station:
 .venv/bin/python3 -m ota_gui.main --sim-host 127.0.0.1 --sim-port 9500
 ```
 
-`--sim-host`/`--sim-port`/`--local-port` are set once here at launch (see
+`--sim-host`/`--sim-port` are set once here at launch (see
 `--help` for defaults) - there's no Simulator panel in the window at all.
 The app connects immediately on launch using that address plus whatever's
 in the **Station** panel's defaults (Station ID, peer callsign, Bandwidth)
