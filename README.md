@@ -1,6 +1,6 @@
 # OpenWave OTA Station GUI
 
-A `customtkinter` front end for `ota_station.py` (in the sibling `open_wave`
+A `customtkinter` front end for `ota_station.py` (in the sibling `openwave`
 repo): send/receive messages, pick a Waveform Mode and FEC preset, and watch
 a live I/Q constellation with SNR/EVM readout while talking to a peer
 station through an `ota_sim` simulator relay.
@@ -14,14 +14,14 @@ the chat entry too).
 
 ## Setup
 
-Expects `open_wave` and `ota_sim` checked out as sibling directories next to
+Expects `openwave` and `ota_sim` checked out as sibling directories next to
 this one (override with the `OPENWAVE_SRC`/`OTA_SIM_SRC` env vars if not):
 
 ```
 Projects/
-  open_wave/
+  openwave/
   ota_sim/
-  open_wave_ui/   <- this repo
+  openwave_ui/    <- this repo
 ```
 
 ```bash
@@ -31,7 +31,7 @@ python3 -m venv --system-site-packages .venv   # --system-site-packages picks up
 
 ## Run
 
-Start a simulator (from `open_wave`, or anywhere with `ota_sim` importable):
+Start a simulator (from `openwave`, or anywhere with `ota_sim` importable):
 
 ```bash
 python3 -m ota_sim.simulator --distance-km 5 --base-snr-db 15
