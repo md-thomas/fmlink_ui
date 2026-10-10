@@ -1,5 +1,10 @@
 # OpenWave OTA Station GUI
 
+> For a station on **real radios**, or to use it from a phone or another
+> computer, see the browser interface in the sibling
+> [openwave_web](../openwave_web) repo. This desktop GUI talks to the
+> simulator only.
+
 A `customtkinter` front end for `ota_station.py` (in the sibling `openwave`
 repo): send/receive messages, pick a Waveform Mode and FEC preset, and watch
 a live I/Q constellation with SNR/EVM readout while talking to a peer
