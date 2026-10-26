@@ -1,4 +1,4 @@
-"""OpenWave OTA Station GUI entry point.
+"""FMlink OTA Station GUI entry point.
 
     python3 -m ota_gui.main --sim-host 127.0.0.1 --sim-port 9500
 

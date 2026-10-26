@@ -8,7 +8,7 @@ import customtkinter as ctk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
-import openwave_modem as modem
+import fmlink_modem as modem
 import ota_station
 
 # Keep a short rolling history of recent bursts (reset whenever the

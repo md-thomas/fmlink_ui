@@ -1,11 +1,13 @@
-# OpenWave OTA Station GUI
+# FMlink OTA Station GUI
+
+*(Formerly openwave_ui / open_wave_ui - renamed to FMlink 2026-10-25.)*
 
 > For a station on **real radios**, or to use it from a phone or another
 > computer, see the browser interface in the sibling
-> [openwave_web](../openwave_web) repo. This desktop GUI talks to the
+> [fmlink_web](../fmlink_web) repo. This desktop GUI talks to the
 > simulator only.
 
-A `customtkinter` front end for `ota_station.py` (in the sibling `openwave`
+A `customtkinter` front end for `ota_station.py` (in the sibling `fmlink`
 repo): send/receive messages, pick a Waveform Mode and FEC preset, and watch
 a live I/Q constellation with SNR/EVM readout while talking to a peer
 station through an `ota_sim` simulator relay.
@@ -19,14 +21,14 @@ the chat entry too).
 
 ## Setup
 
-Expects `openwave` and `ota_sim` checked out as sibling directories next to
-this one (override with the `OPENWAVE_SRC`/`OTA_SIM_SRC` env vars if not):
+Expects `fmlink` and `ota_sim` checked out as sibling directories next to
+this one (override with the `FMLINK_SRC`/`OTA_SIM_SRC` env vars if not):
 
 ```
 Projects/
-  openwave/
+  fmlink/
   ota_sim/
-  openwave_ui/    <- this repo
+  fmlink_ui/    <- this repo
 ```
 
 ```bash
@@ -36,7 +38,7 @@ python3 -m venv --system-site-packages .venv   # --system-site-packages picks up
 
 ## Run
 
-Start a simulator (from `openwave`, or anywhere with `ota_sim` importable):
+Start a simulator (from `fmlink`, or anywhere with `ota_sim` importable):
 
 ```bash
 python3 -m ota_sim.simulator --distance-km 5 --base-snr-db 15
@@ -101,6 +103,6 @@ background but won't look pixel-identical to a native CTk widget.
 
 Window size, both pane split positions, and every Station/Settings field
 are remembered across launches (saved to
-`~/.config/open_wave_ui/ui_state.json` on a clean exit, loaded back at the
+`~/.config/fmlink_ui/ui_state.json` on a clean exit, loaded back at the
 next startup) - **File > Reset UI** clears that and puts the running window
 back to the same hardcoded defaults a first-ever launch would use.

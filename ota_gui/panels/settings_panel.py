@@ -34,8 +34,8 @@ for "None" once a session is already live.
 """
 import customtkinter as ctk
 
-import openwave_fec as fec
-import openwave_link as link
+import fmlink_fec as fec
+import fmlink_link as link
 
 FEC_NONE = 'None'
 

@@ -3,9 +3,9 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "openwave_ui"
+name = "fmlink_ui"
 version = "0.1.0"
-description = "customtkinter GUI front end for the OpenWave ota_station"
+description = "customtkinter GUI front end for the FMlink ota_station"
 requires-python = ">=3.9"
 dependencies = ["customtkinter", "matplotlib", "numpy"]
 

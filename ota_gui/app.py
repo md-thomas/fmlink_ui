@@ -25,7 +25,7 @@ DEFAULT_WINDOW_SIZE = (1300, 820)
 class App(ctk.CTk):
     def __init__(self, sim_host, sim_port):
         super().__init__()
-        self.title("OpenWave OTA Station")
+        self.title("FMlink OTA Station")
 
         # Loaded once here, at startup, and applied below (window size
         # immediately; Station/Settings panel fields and pane split
@@ -238,7 +238,7 @@ class App(ctk.CTk):
             self.status_panel.append(f"[error] {exc}")
 
     def _run_command(self, line):
-        # Pure reference info - openwave_link.WAVEFORM_MODES/openwave_fec.
+        # Pure reference info - fmlink_link.WAVEFORM_MODES/fmlink_fec.
         # PRESETS - needs no session, so it works before ever connecting.
         if line.strip() == '/modes':
             self.status_panel.append(ota_station._waveform_modes_table())

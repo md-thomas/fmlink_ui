@@ -7,7 +7,7 @@ the window - App connects automatically on launch (see app.py), so
 that connect attempt itself failed (see session_panel.py's error label)."""
 import customtkinter as ctk
 
-import openwave_link as link
+import fmlink_link as link
 import ota_station
 
 NOT_CONNECTED_HINT = "not connected"

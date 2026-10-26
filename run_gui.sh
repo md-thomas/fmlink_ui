@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Launches the OpenWave OTA Station GUI. Resolves its own location first,
+# Launches the FMlink OTA Station GUI. Resolves its own location first,
 # so it works no matter what directory you run it from or what it's
 # symlinked as - handy if tab completion isn't finding the venv's python
 # for you.

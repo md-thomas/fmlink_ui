@@ -1,6 +1,6 @@
 """Persists the GUI's own layout/field state (window size, pane split
 positions, Station/Settings panel values) across launches - NOT anything
-about the OpenWave protocol itself (that all lives in ota_station.py/
+about the FMlink protocol itself (that all lives in ota_station.py/
 Station). Saved once, on clean exit (App._on_close), and loaded once, at
 startup (App.__init__) - not written continuously, so a crash simply
 loses whatever changed since the last clean exit rather than risking a
@@ -19,7 +19,7 @@ def _config_path():
     global CONFIG_PATH
     if CONFIG_PATH is None:
         import pathlib
-        CONFIG_PATH = pathlib.Path.home() / '.config' / 'open_wave_ui' / 'ui_state.json'
+        CONFIG_PATH = pathlib.Path.home() / '.config' / 'fmlink_ui' / 'ui_state.json'
     return CONFIG_PATH
 
 
@@ -29,6 +29,10 @@ def load():
     to their own hardcoded default, exactly as if this were a first-ever
     launch."""
     path = _config_path()
+    if not path.exists():
+        # Saved before the FMlink rename (the GUI was open_wave_ui then);
+        # the next save() writes the new location.
+        path = path.parent.parent / 'open_wave_ui' / path.name
     try:
         with open(path) as f:
             data = json.load(f)
